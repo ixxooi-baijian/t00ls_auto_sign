@@ -6,15 +6,6 @@ import json
 login_url = 'https://www.t00ls.net/login.json'
 sigin_url = 'https://www.t00ls.net/ajax-sign.json'
 
-login_header = {
-    'Content-Type': 'application/x-www-form-urlencoded',
-    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36',
-    'Accept-Encoding': 'gzip, deflate',
-    'Sec-Fetch-Site': 'same-origin',
-    'Sec-Fetch-Mode': 'navigate',
-    'Sec-Fetch-User': '?1',
-}
-
 login_post_params = {
     'username': '账号',
     'password': 'md5(密码)',
@@ -34,6 +25,15 @@ login_post_params = {
 # 5 = 您个人计算机的型号
 # 6 = 您最喜欢的餐馆名称
 # 7 = 驾驶执照的最后四位数字
+
+login_header = {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36',
+    'Accept-Encoding': 'gzip, deflate',
+    'Sec-Fetch-Site': 'same-origin',
+    'Sec-Fetch-Mode': 'navigate',
+    'Sec-Fetch-User': '?1',
+}
 
 sched = BlockingScheduler()
 
