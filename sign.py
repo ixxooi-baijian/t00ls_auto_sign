@@ -2,8 +2,10 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 import requests
 import re
 import random
+import json
 
-login_url = 'https://www.t00ls.net/login.html'
+login_url = 'https://www.t00ls.net/login.json'
+sigin_url = 'https://www.t00ls.net/ajax-sign.json'
 
 login_header = {
     'Content-Type': 'application/x-www-form-urlencoded',
@@ -20,8 +22,7 @@ login_post_params = {
     'password': md5(密码),
     'questionid': 问题序号,
     'answer': 问题答案,
-    'formhash': 'b7112f2b',
-    'loginsubmit': '登陆',
+    'action': 'login',
     'redirect': 'https://www.t00ls.net/',
     'cookietime': '2592000',
 }
@@ -29,23 +30,22 @@ login_post_params = {
 sched = BlockingScheduler()
 
 def tools_auto_sigin():
-    get_formhash_url = 'https://www.t00ls.net/checklogin.html'
-
-    get_formhash_response = requests.post(get_formhash_url, headers=login_header)
-    formhash = re.findall('formhash=(.*?)"', get_formhash_response.text)[0]
-
-    sigin_url = 'https://www.t00ls.net/ajax-sign.json'
-
+    # 模拟登陆
+    login_response = requests.post(login_url, headers=login_header, data=login_post_params, allow_redirects=False, timeout=5)
+    login_response_json = json.loads(login_response.text)
+    # 获取表单哈希值
+    formhash = login_response_json['formhash']
+    
     sigin_post_params = {
         'formhash': formhash,
         'signsubmit': 'apply'
     }
 
-    # 模拟登陆
-    login_response = requests.post(login_url, headers=login_header, data=login_post_params, allow_redirects=False, timeout=5)
+
     # 获取返回的cookie
-    if login_response.status_code == 302:
+    if login_response_json['status'] == 'success':
         print('成功登陆')
+        # 构建cookie
         response_cookie_str = login_response.headers['Set-Cookie']
         reg = re.compile('(.*?(?:UTH_sid=|UTH_auth=|).*?)[, ;]', re.S)
         content = re.findall(reg, response_cookie_str)
