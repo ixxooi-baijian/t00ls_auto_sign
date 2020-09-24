@@ -16,14 +16,24 @@ login_header = {
 }
 
 login_post_params = {
-    'username': 账号,
-    'password': md5(密码),
-    'questionid': 问题序号,
-    'answer': 问题答案,
+    'username': '账号',
+    'password': 'md5(密码)',
+    'questionid': '问题序号',
+    'answer': '问题答案',
     'action': 'login',
     'redirect': 'https://www.t00ls.net/',
     'cookietime': '2592000',
 }
+
+# 问题序号如下：
+# 0 = 没有安全提问
+# 1 = 母亲的名字
+# 2 = 爷爷的名字
+# 3 = 父亲出生的城市
+# 4 = 您其中一位老师的名字
+# 5 = 您个人计算机的型号
+# 6 = 您最喜欢的餐馆名称
+# 7 = 驾驶执照的最后四位数字
 
 sched = BlockingScheduler()
 
