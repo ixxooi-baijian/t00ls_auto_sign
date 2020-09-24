@@ -1,6 +1,5 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
 import requests
-import re
 import random
 import json
 
@@ -10,7 +9,6 @@ sigin_url = 'https://www.t00ls.net/ajax-sign.json'
 login_header = {
     'Content-Type': 'application/x-www-form-urlencoded',
     'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36',
-    'Cookie': 'UTH_cookietime=2592000; ',
     'Accept-Encoding': 'gzip, deflate',
     'Sec-Fetch-Site': 'same-origin',
     'Sec-Fetch-Mode': 'navigate',
@@ -33,31 +31,29 @@ def tools_auto_sigin():
     # 模拟登陆
     login_response = requests.post(login_url, headers=login_header, data=login_post_params, allow_redirects=False, timeout=5)
     login_response_json = json.loads(login_response.text)
+    
+    # 获取cookie
+    cookie = requests.utils.dict_from_cookiejar(login_response.cookies)
+
     # 获取表单哈希值
     formhash = login_response_json['formhash']
     
+    # 构建签到表单
     sigin_post_params = {
         'formhash': formhash,
         'signsubmit': 'apply'
     }
 
-
-    # 获取返回的cookie
     if login_response_json['status'] == 'success':
         print('成功登陆')
-        # 构建cookie
-        response_cookie_str = login_response.headers['Set-Cookie']
-        reg = re.compile('(.*?(?:UTH_sid=|UTH_auth=|).*?)[, ;]', re.S)
-        content = re.findall(reg, response_cookie_str)
-        set_cookie_params_dict = {one.split('=')[0]:one.split('=')[1] for one in content if len(one.split('='))==2 }
-
-        # 插入cookie
-        login_header['Cookie'] += 'UTH_sid=' + set_cookie_params_dict['UTH_sid'] + '; '
-        login_header['Cookie'] += 'UTH_auth=' + set_cookie_params_dict['UTH_auth'] + '; '
-
         # 签到模块
-        sigin_response = requests.post(sigin_url, headers=login_header, data= sigin_post_params)
-        print(sigin_response.text)
+        sigin_response = requests.post(sigin_url, headers=login_header, cookies=cookie, data= sigin_post_params)
+        if (sigin_response["status"] == "success"):
+            print ("签到成功")
+        elif (sigin_response["message"] == "alreadysign"):
+            print ("已经签到过了")
+        else:
+            tools_auto_sigin()
     else:
         tools_auto_sigin()
     
