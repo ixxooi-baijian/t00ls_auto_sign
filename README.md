@@ -1,5 +1,5 @@
 # t00ls_auto_sign
-土司安全论坛( https://www.t00ls.net ) ，自动签到脚本
+土司安全论坛( https://www.t00ls.cc ) ，自动签到脚本
 
 ---
 
