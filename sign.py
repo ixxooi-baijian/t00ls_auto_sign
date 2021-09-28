@@ -3,8 +3,8 @@ import requests
 import random
 import json
 
-login_url = 'https://www.t00ls.net/login.json'
-sigin_url = 'https://www.t00ls.net/ajax-sign.json'
+login_url = 'https://www.t00ls.cc/login.json'
+sigin_url = 'https://www.t00ls.cc/ajax-sign.json'
 
 login_post_params = {
     'username': '账号',
