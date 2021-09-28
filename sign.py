@@ -12,7 +12,7 @@ login_post_params = {
     'questionid': '问题序号',
     'answer': '问题答案',
     'action': 'login',
-    'redirect': 'https://www.t00ls.net/',
+    'redirect': 'https://www.t00ls.cc/',
     'cookietime': '2592000',
 }
 
