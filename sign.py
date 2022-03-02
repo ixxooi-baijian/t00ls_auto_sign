@@ -103,5 +103,6 @@ if __name__ == '__main__':
     print('启动每日调度任务中...')
     scheduler.add_job(random_time_function, 'cron', year='*', month='*', day='*', hour=0,
                       minute=0, second=0)
+    print('启动成功！！！调度器将在每日0点执行。')
     scheduler.start()
-    print('启动成功！！！')
+
