@@ -72,7 +72,29 @@ def tools_auto_sign():
         tools_auto_sign()
 
 
+def random_time_function():
+    global last_day_sign_time
+    now_datetime = datetime.datetime.now()
+    if last_day_sign_time:
+        if (now_datetime.date() - last_day_sign_time.date()).days == 1:
+            _hour_random = random.randrange(24)
+            _minute_random = random.randrange(60)
+            _second_random = random.randrange(60)
+            scheduler.add_job(tools_auto_sign, 'cron', year=now_datetime.year, month=now_datetime.month,
+                              day=now_datetime.day, hour=_hour_random, minute=_minute_random, second=_second_random)
+            scheduler.start()
+            last_day_sign_time = datetime.datetime(year=now_datetime.year, month=now_datetime.month,
+                                                   day=now_datetime.day, hour=_hour_random, minute=_minute_random,
+                                                   second=_second_random)
+        else:
+            last_day_sign_time = now_datetime
+            tools_auto_sign()
+    else:
+        last_day_sign_time = now_datetime
+        tools_auto_sign()
+
+
 if __name__ == '__main__':
-    scheduler.add_job(tools_auto_sign, 'cron', year='*', month='*', day='*', hour=str(random.randrange(24)),
-                      minute='00', second='00')
+    scheduler.add_job(random_time_function, 'cron', year='*', month='*', day='*', hour=0,
+                      minute=0, second=0)
     scheduler.start()
