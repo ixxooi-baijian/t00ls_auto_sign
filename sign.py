@@ -35,39 +35,44 @@ login_header = {
     'Sec-Fetch-User': '?1',
 }
 
-sched = BlockingScheduler()
+scheduler = BlockingScheduler()
 
-def tools_auto_sigin():
+
+def tools_auto_sign():
     # 模拟登陆
-    login_response = requests.post(login_url, headers=login_header, data=login_post_params, allow_redirects=False, timeout=5)
+    login_response = requests.post(login_url, headers=login_header, data=login_post_params, allow_redirects=False,
+                                   timeout=5)
     login_response_json = json.loads(login_response.text)
-    
+
     # 获取cookie
     cookie = requests.utils.dict_from_cookiejar(login_response.cookies)
 
     # 获取表单哈希值
-    formhash = login_response_json['formhash']
-    
+    form_hash = login_response_json['formhash']
+
     # 构建签到表单
-    sigin_post_params = {
-        'formhash': formhash,
+    sign_post_params = {
+        'formhash': form_hash,
         'signsubmit': 'apply'
     }
 
     if login_response_json['status'] == 'success':
         print('成功登陆')
         # 签到模块
-        sigin_response = requests.post(sigin_url, headers=login_header, cookies=cookie, data= sigin_post_params)
-        if (sigin_response["status"] == "success"):
-            print ("签到成功")
-        elif (sigin_response["message"] == "alreadysign"):
-            print ("已经签到过了")
+        sign_response = requests.post(sigin_url, headers=login_header, cookies=cookie, data=sign_post_params).json()
+        print(sign_response)
+
+        if sign_response["status"] == "success":
+            print("签到成功")
+        elif sign_response["message"] == "alreadysign":
+            print("已经签到过了")
         else:
-            tools_auto_sigin()
+            tools_auto_sign()
     else:
-        tools_auto_sigin()
-    
-    
+        tools_auto_sign()
+
+
 if __name__ == '__main__':
-    sched.add_job(tools_auto_sigin, 'cron', year='*', month='*', day='*', hour=str(random.randrange(24)), minute='00', second='00')
-    sched.start()
+    scheduler.add_job(tools_auto_sign, 'cron', year='*', month='*', day='*', hour=str(random.randrange(24)),
+                      minute='00', second='00')
+    scheduler.start()
