@@ -35,8 +35,6 @@ login_header = {
     'Sec-Fetch-User': '?1',
 }
 
-scheduler = BlockingScheduler()
-
 
 def tools_auto_sign():
     # 模拟登陆
@@ -83,9 +81,11 @@ def random_time_function():
             _minute_random = random.randrange(60)
             _second_random = random.randrange(60)
             print('执行t00ls签到任务中...')
-            scheduler.add_job(tools_auto_sign, 'cron', year=now_datetime.year, month=now_datetime.month,
-                              day=now_datetime.day, hour=_hour_random, minute=_minute_random, second=_second_random)
-            scheduler.start()
+            scheduler_sign = BlockingScheduler()
+            scheduler_sign.add_job(tools_auto_sign, 'cron', year=now_datetime.year, month=now_datetime.month,
+                                   day=now_datetime.day, hour=_hour_random, minute=_minute_random,
+                                   second=_second_random)
+            scheduler_sign.start()
             last_day_sign_time = datetime.datetime(year=now_datetime.year, month=now_datetime.month,
                                                    day=now_datetime.day, hour=_hour_random, minute=_minute_random,
                                                    second=_second_random)
@@ -101,8 +101,9 @@ def random_time_function():
 
 if __name__ == '__main__':
     print('启动每日调度任务中...')
+    scheduler = BlockingScheduler()
+
     scheduler.add_job(random_time_function, 'cron', year='*', month='*', day='*', hour=0,
                       minute=0, second=0)
     print('启动成功！！！调度器将在每日0点执行。')
     scheduler.start()
-
