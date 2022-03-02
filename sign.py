@@ -4,7 +4,7 @@ import random
 import json
 
 login_url = 'https://www.t00ls.cc/login.json'
-sigin_url = 'https://www.t00ls.cc/ajax-sign.json'
+sign_url = 'https://www.t00ls.cc/ajax-sign.json'
 
 login_post_params = {
     'username': '账号',
@@ -59,7 +59,7 @@ def tools_auto_sign():
     if login_response_json['status'] == 'success':
         print('成功登陆')
         # 签到模块
-        sign_response = requests.post(sigin_url, headers=login_header, cookies=cookie, data=sign_post_params).json()
+        sign_response = requests.post(sign_url, headers=login_header, cookies=cookie, data=sign_post_params).json()
         print(sign_response)
 
         if sign_response["status"] == "success":
