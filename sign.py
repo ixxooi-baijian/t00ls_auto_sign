@@ -75,11 +75,14 @@ def tools_auto_sign():
 def random_time_function():
     global last_day_sign_time
     now_datetime = datetime.datetime.now()
+
     if last_day_sign_time:
         if (now_datetime.date() - last_day_sign_time.date()).days == 1:
+            print('生成随机执行t00ls签到任务...')
             _hour_random = random.randrange(24)
             _minute_random = random.randrange(60)
             _second_random = random.randrange(60)
+            print('执行t00ls签到任务中...')
             scheduler.add_job(tools_auto_sign, 'cron', year=now_datetime.year, month=now_datetime.month,
                               day=now_datetime.day, hour=_hour_random, minute=_minute_random, second=_second_random)
             scheduler.start()
@@ -87,14 +90,18 @@ def random_time_function():
                                                    day=now_datetime.day, hour=_hour_random, minute=_minute_random,
                                                    second=_second_random)
         else:
+            print('上次签到任务失败，本次继续尝试执行中...')
             last_day_sign_time = now_datetime
             tools_auto_sign()
     else:
+        print('首次执行t00ls签到任务...')
         last_day_sign_time = now_datetime
         tools_auto_sign()
 
 
 if __name__ == '__main__':
+    print('启动每日调度任务中...')
     scheduler.add_job(random_time_function, 'cron', year='*', month='*', day='*', hour=0,
                       minute=0, second=0)
     scheduler.start()
+    print('启动成功！！！')
