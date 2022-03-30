@@ -65,45 +65,14 @@ def tools_auto_sign():
         elif sign_response["message"] == "alreadysign":
             print("已经签到过了")
         else:
-            tools_auto_sign()
-    else:
-        tools_auto_sign()
-
-
-def random_time_function():
-    global last_day_sign_time
-    now_datetime = datetime.datetime.now()
-
-    if last_day_sign_time:
-        if (now_datetime.date() - last_day_sign_time.date()).days == 1:
-            print('生成随机执行t00ls签到任务...')
-            _hour_random = random.randrange(24)
-            _minute_random = random.randrange(60)
-            _second_random = random.randrange(60)
-            print('执行t00ls签到任务中...')
-            scheduler_sign = BlockingScheduler()
-            scheduler_sign.add_job(tools_auto_sign, 'cron', year=now_datetime.year, month=now_datetime.month,
-                                   day=now_datetime.day, hour=_hour_random, minute=_minute_random,
-                                   second=_second_random)
-            scheduler_sign.start()
-            last_day_sign_time = datetime.datetime(year=now_datetime.year, month=now_datetime.month,
-                                                   day=now_datetime.day, hour=_hour_random, minute=_minute_random,
-                                                   second=_second_random)
-        else:
-            print('上次签到任务失败，本次继续尝试执行中...')
-            last_day_sign_time = now_datetime
-            tools_auto_sign()
-    else:
-        print('首次执行t00ls签到任务...')
-        last_day_sign_time = now_datetime
-        tools_auto_sign()
+            print("签到异常")
 
 
 if __name__ == '__main__':
     print('启动每日调度任务中...')
     scheduler = BlockingScheduler()
 
-    scheduler.add_job(random_time_function, 'cron', year='*', month='*', day='*', hour=0,
-                      minute=0, second=0)
-    print('启动成功！！！调度器将在每日0点执行。')
+    scheduler.add_job(tools_auto_sign, 'cron', year='*', month='*', day='*', hour=13,
+                      minute=13, second=13)
+    print('启动成功！！！调度器将在每日13点13分13秒执行。')
     scheduler.start()
